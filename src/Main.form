@@ -1,12 +1,380 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Main">
-  <grid id="27dc6" binding="pnlMain" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-    <margin top="0" left="0" bottom="0" right="0"/>
+  <grid id="27dc6" binding="pnlMain" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="20" left="20" bottom="20" right="20"/>
     <constraints>
-      <xy x="20" y="20" width="500" height="400"/>
+      <xy x="20" y="20" width="651" height="598"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-11973034"/>
+      <foreground color="-11973034"/>
+    </properties>
     <border type="none"/>
-    <children/>
+    <children>
+      <grid id="34a6" binding="pnlRequestARide" layout-manager="GridLayoutManager" row-count="9" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="15" left="15" bottom="15" right="15"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-11973034"/>
+          <foreground color="-11973034"/>
+        </properties>
+        <border type="line">
+          <color color="-1"/>
+        </border>
+        <children>
+          <component id="71d5d" class="javax.swing.JButton" binding="btnBook">
+            <constraints>
+              <grid row="7" column="0" row-span="2" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="-1" height="46"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-14382395"/>
+              <font name="Inter" size="12"/>
+              <foreground color="-1"/>
+              <text value="BOOK"/>
+            </properties>
+          </component>
+          <component id="a7458" class="javax.swing.JLabel" binding="lblRequestARide">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Inter" size="24"/>
+              <foreground color="-1"/>
+              <text value="Book a Ride"/>
+            </properties>
+          </component>
+          <component id="abcf3" class="javax.swing.JSeparator" binding="underline1">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <foreground color="-11643808"/>
+            </properties>
+          </component>
+          <grid id="447a8" binding="pnlVehicles" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="6">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-11973034"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="e15d4" class="javax.swing.JLabel" binding="lblVehicle">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <alignmentY value="0.5"/>
+                  <font name="Inter" size="12"/>
+                  <foreground color="-1"/>
+                  <text value="Vehicle"/>
+                </properties>
+              </component>
+              <component id="29b6b" class="javax.swing.JRadioButton" binding="rbtnCar">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <alignmentY value="0.0"/>
+                  <background color="-11973034"/>
+                  <font name="Inter" size="12"/>
+                  <foreground color="-1"/>
+                  <margin top="0" left="2" bottom="5" right="2"/>
+                  <text value="Car"/>
+                  <verticalAlignment value="1"/>
+                  <verticalTextPosition value="0"/>
+                </properties>
+              </component>
+              <component id="2ca77" class="javax.swing.JRadioButton" binding="rbtnMotorcycle">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <alignmentY value="0.0"/>
+                  <background color="-11973034"/>
+                  <font name="Inter" size="12"/>
+                  <foreground color="-1"/>
+                  <margin top="0" left="2" bottom="5" right="2"/>
+                  <text value="Motorcycle"/>
+                  <verticalAlignment value="1"/>
+                  <verticalTextPosition value="0"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="cbf86" binding="pnlPickUpLocation" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="6">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-11973034"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="2ad4c" class="javax.swing.JLabel" binding="lblPickUpLoc">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font name="Inter" size="12"/>
+                  <foreground color="-1"/>
+                  <text value="Pickup Location"/>
+                </properties>
+              </component>
+              <component id="a7f23" class="javax.swing.JTextField" binding="tfPickUpLoc">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="46"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <font name="Inter" size="12"/>
+                  <margin top="2" left="9" bottom="2" right="6"/>
+                  <text value="Enter pickup location"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="50272" binding="pnlDropOffLocation" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="6">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-11973034"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="ab5c8" class="javax.swing.JLabel" binding="lblDropOffLoc">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font name="Inter" size="12"/>
+                  <foreground color="-1"/>
+                  <text value="Dropoff Location"/>
+                </properties>
+              </component>
+              <component id="91718" class="javax.swing.JTextField" binding="tfDropOffLocation">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="9" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="46"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <font name="Inter" size="12"/>
+                  <margin top="2" left="9" bottom="2" right="6"/>
+                  <text value="Enter dropoff location"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="277eb" binding="pnlPaymentMethod" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="6">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-11973034"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="8e419" class="javax.swing.JLabel" binding="lblPayment">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <alignmentY value="0.5"/>
+                  <font name="Inter" size="12"/>
+                  <foreground color="-1"/>
+                  <text value="Payment Method"/>
+                </properties>
+              </component>
+              <component id="eac85" class="javax.swing.JRadioButton" binding="rbtnCash">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <alignmentY value="0.0"/>
+                  <background color="-11973034"/>
+                  <font name="Inter" size="12"/>
+                  <foreground color="-1"/>
+                  <label value="Cash"/>
+                  <margin top="0" left="2" bottom="5" right="2"/>
+                  <selected value="true"/>
+                  <text value="Cash"/>
+                  <verticalAlignment value="1"/>
+                  <verticalTextPosition value="0"/>
+                </properties>
+              </component>
+              <component id="46266" class="javax.swing.JRadioButton" binding="rbtnCard">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <actionCommand value=""/>
+                  <alignmentY value="0.0"/>
+                  <background color="-11973034"/>
+                  <font name="Inter" size="12"/>
+                  <foreground color="-1"/>
+                  <label value="Card"/>
+                  <margin top="0" left="2" bottom="5" right="2"/>
+                  <text value="Card"/>
+                  <verticalAlignment value="1"/>
+                  <verticalTextPosition value="0"/>
+                </properties>
+              </component>
+              <component id="4e4c8" class="javax.swing.JRadioButton" binding="rbtnEwallet">
+                <constraints>
+                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <actionCommand value=""/>
+                  <alignmentY value="0.0"/>
+                  <background color="-11973034"/>
+                  <font name="Inter" size="12"/>
+                  <foreground color="-1"/>
+                  <label value="E-Wallet"/>
+                  <margin top="0" left="2" bottom="5" right="2"/>
+                  <text value="E-Wallet"/>
+                  <verticalAlignment value="1"/>
+                  <verticalTextPosition value="0"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="9a468" binding="pnlDistFare" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="6">
+            <margin top="5" left="5" bottom="5" right="5"/>
+            <constraints>
+              <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-14275281"/>
+              <font name="Inter" size="12"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="7a771" class="javax.swing.JLabel" binding="lblEstDistance">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font name="Inter" size="12" style="1"/>
+                  <foreground color="-1"/>
+                  <text value="Est. Distance:"/>
+                </properties>
+              </component>
+              <component id="bac37" class="javax.swing.JTextField" binding="tfEstDistance">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="46"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <background color="-14210000"/>
+                  <caretColor color="-14275281"/>
+                  <font name="Inter" size="12"/>
+                  <foreground color="-1"/>
+                  <text value="0.00 km"/>
+                </properties>
+              </component>
+              <component id="5e49f" class="javax.swing.JLabel" binding="lblEstFare">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font name="Inter" size="12" style="1"/>
+                  <foreground color="-1"/>
+                  <text value="Est. Fare:"/>
+                </properties>
+              </component>
+              <component id="21eac" class="javax.swing.JTextField" binding="tfEstFare">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="46"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <background color="-14210000"/>
+                  <caretColor color="-14275281"/>
+                  <font name="Inter" size="12"/>
+                  <foreground color="-1"/>
+                  <text value="Php 0.00"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
+      <grid id="3edde" binding="pnlRide" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="15" left="15" bottom="15" right="15"/>
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-11973034"/>
+        </properties>
+        <border type="line">
+          <color color="-1"/>
+        </border>
+        <children>
+          <component id="6baef" class="javax.swing.JLabel" binding="lblActiveRideStatus">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Inter" size="24"/>
+              <foreground color="-1"/>
+              <text value="Active Ride Status"/>
+            </properties>
+          </component>
+          <grid id="c0422" binding="pnlMap" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-14210000"/>
+            </properties>
+            <border type="line">
+              <color color="-11577502"/>
+            </border>
+            <children/>
+          </grid>
+          <component id="6b936" class="javax.swing.JSeparator" binding="underline2">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <foreground color="-11643808"/>
+            </properties>
+          </component>
+          <component id="e271f" class="javax.swing.JSeparator">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+        </children>
+      </grid>
+    </children>
   </grid>
+  <buttonGroups>
+    <group name="VehicleGroup">
+      <member id="29b6b"/>
+      <member id="2ca77"/>
+    </group>
+    <group name="PaymentGroup">
+      <member id="eac85"/>
+      <member id="4e4c8"/>
+      <member id="46266"/>
+    </group>
+  </buttonGroups>
 </form>

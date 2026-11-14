@@ -1,13 +1,13 @@
-public class Ride {
-    private String rideID;
+public abstract class Ride {
     private Location pickUpLoc;
     private Location dropOffLoc;
+    private double distanceKm;
     private double fareAmount;
+    private String status
     private User passenger;
     private Driver driver;
 
-    public Ride(String rideID, Location pickUpLoc, Location dropOffLoc, double fareAmount, User passenger, Driver driver){
-        this.rideID = rideID;
+    public Ride(Location pickUpLoc, Location dropOffLoc, double distanceKm, double fareAmount, String status){
         this.pickUpLoc = pickUpLoc;
         this.dropOffLoc = dropOffLoc;
         this.fareAmount = fareAmount;
@@ -15,11 +15,9 @@ public class Ride {
         this.driver = driver;
     }
 
-    public String status(){
-
-    }
-
-    public void calculateFare(){
-
-    }
+    // Getters and Setters
+    public Location getPickUpLoc() { pickUpLoc; }
+    public void setPickUpLoc(Location pickUpLoc) { this.pickUpLoc = pickUpLoc; }
+    public Location getDropOffLoc() { dropOffLoc; }
+    public void setDropOffLoc(Location dropOffLoc) { this.dropOffLoc = dropOffLoc; }
 }
