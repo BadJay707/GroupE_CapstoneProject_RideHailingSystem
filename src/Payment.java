@@ -5,6 +5,7 @@ public class Payment {
         this.amount = amount;
     }
 
+    /* Uncomment after implementing
     public String status(){
 
     }
@@ -12,12 +13,8 @@ public class Payment {
     public double refund(){
 
     }
+    */
 
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount){
-        this.amount = amount;
-    }
+    public double getAmount() { return amount; }
+    public void setAmount(double amount){ this.amount = amount; }
 }
