@@ -16,5 +16,5 @@ public class Payment {
     */
 
     public double getAmount() { return amount; }
-    public void setAmount(double amount){ this.amount = amount; }
+    public void setAmount(double amount){ if(amount > 0) this.amount = amount; }
 }
