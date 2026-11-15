@@ -32,7 +32,7 @@ public class Main extends JFrame{
     private Location pickupLocation;
     private Location dropoffLocation;
     private List<Driver> drivers;
-    private static final String LOCATIONS_FILE = "data/locations.txt";
+    private static final String LOCATIONS_FILE = "src/data/locations.txt";
 
     private JPanel pnlMain;
     private JLabel lblRequestARide;
@@ -63,7 +63,6 @@ public class Main extends JFrame{
     private JPanel pnlPickUpLocation;
     private JPanel pnlDropOffLocation;
     private JPanel pnlPaymentMethod;
-
 
     public Main() throws InvalidLocationException{
         ensureLocationsFileExists();
@@ -122,14 +121,14 @@ public class Main extends JFrame{
         });
     }
 
-    // Checks and makes sures Locations.txt exists
+    // Checks and makes sure Locations.txt exists
     private void ensureLocationsFileExists(){
         File file = new File(LOCATIONS_FILE);
-        if (file.getParentFile() != null) {
+        if(file.getParentFile() != null){
             file.getParentFile().mkdirs();
         }
-        if (!file.exists()) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        if(!file.exists()){
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
                 writer.write("cit-u,10.29578,123.88044");
                 writer.newLine();
                 writer.write("ayala,10.31778,123.90500");
@@ -141,7 +140,7 @@ public class Main extends JFrame{
                 writer.write("sm city,10.3111,123.9181");
                 writer.newLine();
             }
-            catch (IOException e){
+            catch(IOException e){
                 e.printStackTrace();
             }
         }
