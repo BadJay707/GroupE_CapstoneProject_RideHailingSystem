@@ -1,3 +1,5 @@
+package shared;
+
 public class CarRide extends Ride{
     private static final double BASE_FARE = 45.0; // Edit here to change the values
     private static final double RATE_PER_KM = 15.0;  // Edit here to change the values

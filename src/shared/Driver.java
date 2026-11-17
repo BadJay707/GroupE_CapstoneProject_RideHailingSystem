@@ -1,3 +1,5 @@
+package shared;
+
 public class Driver extends User{
     private String vehicleType;
     private String plateNumber;

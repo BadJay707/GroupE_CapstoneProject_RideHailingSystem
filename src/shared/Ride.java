@@ -1,3 +1,5 @@
+package shared;
+
 public abstract class Ride {
     private User passenger;
     private Driver driver;
