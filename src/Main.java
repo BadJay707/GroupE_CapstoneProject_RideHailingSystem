@@ -1,3 +1,5 @@
+import shared.*;
+
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
@@ -24,6 +26,8 @@ import java.nio.charset.StandardCharsets;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatClientProperties;
 
 public class Main extends JFrame{
     private JXMapViewer mapViewer;
@@ -32,7 +36,7 @@ public class Main extends JFrame{
     private Location pickupLocation;
     private Location dropoffLocation;
     private List<Driver> drivers;
-    private static final String LOCATIONS_FILE = "data/locations.txt";
+    private static final String LOCATIONS_FILE = "src/data/locations.txt";
 
     private JPanel pnlMain;
     private JLabel lblRequestARide;
@@ -44,8 +48,6 @@ public class Main extends JFrame{
     private JLabel lblVehicle;
     private JRadioButton rbtnCar;
     private JRadioButton rbtnMotorcycle;
-    private JTextField tfEstDistance;
-    private JTextField tfEstFare;
     private JLabel lblEstDistance;
     private JLabel lblEstFare;
     private JButton btnBook;
@@ -63,7 +65,8 @@ public class Main extends JFrame{
     private JPanel pnlPickUpLocation;
     private JPanel pnlDropOffLocation;
     private JPanel pnlPaymentMethod;
-
+    private JLabel lblEstDistanceVal;
+    private JLabel lblEstFareVal;
 
     public Main() throws InvalidLocationException{
         ensureLocationsFileExists();
@@ -76,6 +79,15 @@ public class Main extends JFrame{
         setVisible(true);
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
+        // Make panels, text fields, and buttons round
+        pnlRequestARide.putClientProperty(FlatClientProperties.STYLE_CLASS, "roundPanel");
+        pnlRide.putClientProperty(FlatClientProperties.STYLE_CLASS, "roundPanel");
+        pnlDistFare.putClientProperty("FlatLaf.style", "arc: 17");
+        btnBook.putClientProperty("FlatLaf.style", "arc: 17");
+        tfDropOffLoc.putClientProperty("FlatLaf.style", "arc: 17");
+        tfPickUpLoc.putClientProperty("FlatLaf.style", "arc: 17");
+
+        //----------------Start of the Code----------------//
         currentUser = new User("admin", "admin@example.com", "123456789"); // TODO CHANGE THIS LATER
         drivers = new ArrayList<>();
         // test
@@ -122,14 +134,14 @@ public class Main extends JFrame{
         });
     }
 
-    // Checks and makes sures Locations.txt exists
+    // Checks and makes sure Locations.txt exists
     private void ensureLocationsFileExists(){
         File file = new File(LOCATIONS_FILE);
-        if (file.getParentFile() != null) {
+        if(file.getParentFile() != null){
             file.getParentFile().mkdirs();
         }
-        if (!file.exists()) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        if(!file.exists()){
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
                 writer.write("cit-u,10.29578,123.88044");
                 writer.newLine();
                 writer.write("ayala,10.31778,123.90500");
@@ -141,7 +153,7 @@ public class Main extends JFrame{
                 writer.write("sm city,10.3111,123.9181");
                 writer.newLine();
             }
-            catch (IOException e){
+            catch(IOException e){
                 e.printStackTrace();
             }
         }
@@ -182,8 +194,8 @@ public class Main extends JFrame{
 
                     currentRide = currentUser.bookRide(pickupLocation, dropoffLocation, isCar);
 
-                    tfEstDistance.setText(String.format("%.2f km", currentRide.getDistanceKm()));
-                    tfEstFare.setText(String.format("Php %.2f", currentRide.getFareAmount()));
+                    lblEstDistanceVal.setText(String.format("%.2f km", currentRide.getDistanceKm()));
+                    lblEstFareVal.setText(String.format("Php %.2f", currentRide.getFareAmount()));
 
                     GeoPosition p1Geo = new GeoPosition(pickupLocation.getLatitude(), pickupLocation.getLongitude());
                     GeoPosition p2Geo = new GeoPosition(dropoffLocation.getLatitude(), dropoffLocation.getLongitude());
@@ -428,6 +440,8 @@ public class Main extends JFrame{
     }
 
     static void main(String[] args) throws InvalidLocationException {
+        FlatDarkLaf.registerCustomDefaultsSource("resources");
+        FlatDarkLaf.setup();
         new Main();
     }
 }
