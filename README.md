@@ -1,4 +1,4 @@
-# 🚕 Ride Hailing System
+# 🚕 Spritztour (Ride Hailing System)
 
 ## Members:
 - Dylan Brandon V. King
