@@ -22,6 +22,7 @@ public abstract class Ride {
         this.fareAmount = calculateFare();
     }
 
+    //----------------Methods----------------//
     public abstract double calculateFare();
 
     // Getters and Setters

@@ -46,7 +46,7 @@ public class Main extends JFrame{
     private JTextField tfDropOffLoc;
     private JLabel lblDropOffLoc;
     private JLabel lblVehicle;
-    private JRadioButton rbtnCar;
+    private JToggleButton rbtnCar;
     private JRadioButton rbtnMotorcycle;
     private JLabel lblEstDistance;
     private JLabel lblEstFare;
@@ -67,6 +67,7 @@ public class Main extends JFrame{
     private JPanel pnlPaymentMethod;
     private JLabel lblEstDistanceVal;
     private JLabel lblEstFareVal;
+    private JButton btnCancelRide;
 
     public Main() throws InvalidLocationException{
         ensureLocationsFileExists();
@@ -82,10 +83,13 @@ public class Main extends JFrame{
         // Make panels, text fields, and buttons round
         pnlRequestARide.putClientProperty(FlatClientProperties.STYLE_CLASS, "roundPanel");
         pnlRide.putClientProperty(FlatClientProperties.STYLE_CLASS, "roundPanel");
+        pnlMap.putClientProperty(FlatClientProperties.STYLE_CLASS, "mapPanel");
         pnlDistFare.putClientProperty("FlatLaf.style", "arc: 17");
-        btnBook.putClientProperty("FlatLaf.style", "arc: 17");
+        btnBook.putClientProperty("FlatLaf.style", "arc: 17; font: bold 16 'Inter'");
+        btnCancelRide.putClientProperty("FlatLaf.style", "arc: 17; font: bold 16 'Inter'");
         tfDropOffLoc.putClientProperty("FlatLaf.style", "arc: 17");
         tfPickUpLoc.putClientProperty("FlatLaf.style", "arc: 17");
+        pnlDistFare.setSize(getPreferredSize());
 
         //----------------Start of the Code----------------//
         currentUser = new User("admin", "admin@example.com", "123456789"); // TODO CHANGE THIS LATER
@@ -94,10 +98,26 @@ public class Main extends JFrame{
         drivers.add(new Driver("Speedy Gonzales", "speedingyourgonzales@gmail.com", "123456789", "Motorcycle", "RUN-5555"));
         drivers.add(new Driver("Hiroshi Odokawa", "oddtaxi@gmail.com", "123456789", "Car", "ODD-3939"));
 
+        // Button Functionality
         btnBook.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 handleBookRide();
+            }
+        });
+        btnCancelRide.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO ADD A POPUP FOR ARE YOU SURE?
+                tfPickUpLoc.setText("Enter pickup location");
+                tfDropOffLoc.setText("Enter dropoff location");
+                lblEstDistanceVal.setText("0.00 km");
+                lblEstFareVal.setText("Php 0.00");
+                rbtnCar.setSelected(true);
+                rbtnCash.setSelected(true);
+                currentRide = null;
+                mapViewer.setOverlayPainter(null);
+                mapViewer.repaint();
             }
         });
 
@@ -133,6 +153,8 @@ public class Main extends JFrame{
             }
         });
     }
+
+    //----------------Functions----------------//
 
     // Checks and makes sure Locations.txt exists
     private void ensureLocationsFileExists(){
@@ -439,7 +461,7 @@ public class Main extends JFrame{
         }
     }
 
-    static void main(String[] args) throws InvalidLocationException {
+    public static void main(String[] args) throws InvalidLocationException {
         FlatDarkLaf.registerCustomDefaultsSource("resources");
         FlatDarkLaf.setup();
         new Main();

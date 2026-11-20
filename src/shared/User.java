@@ -13,9 +13,9 @@ public class User {
         this.activeRide = null;
     }
 
+    //----------------Methods----------------//
     public Ride bookRide(Location pickup, Location dropoff, boolean isCar) throws InvalidLocationException{
-        activeRide = (isCar ? new CarRide(this, pickup, dropoff) : new MotorRide(this, pickup, dropoff));
-        return activeRide;
+        return (isCar ? new CarRide(this, pickup, dropoff) : new MotorRide(this, pickup, dropoff)); // Abstract factory???
     }
 
     public void cancelRide(Ride ride){
@@ -25,6 +25,7 @@ public class User {
         }
     }
 
+    // Getters and Setters
     public String getName(){ return name; }
     public String getContactNum() { return contactNum; }
     public String getEmail() { return email; }

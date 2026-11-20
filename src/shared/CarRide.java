@@ -8,6 +8,7 @@ public class CarRide extends Ride{
         super(passenger, pickUpLoc, dropOffLoc);
     }
 
+    //----------------Methods----------------//
     @Override
     public double calculateFare(){
         double total = BASE_FARE + (getDistanceKm() * RATE_PER_KM);

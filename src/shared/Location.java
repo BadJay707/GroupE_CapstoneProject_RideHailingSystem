@@ -11,6 +11,8 @@ public class Location {
         setLatitude(latitude);
     }
 
+    //----------------Methods----------------//
+
     // Calculates distance in km using the Haversine formula
     public double getDistanceTo(Location other){
         final double R = 6371.0;
