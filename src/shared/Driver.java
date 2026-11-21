@@ -13,6 +13,7 @@ public class Driver extends User{
         this.isAvailable = true;
     }
 
+    //----------------Methods----------------//
     public void acceptRide(Ride ride){
         if(ride != null && this.isAvailable && ride.getDriver() == null){
             this.isAvailable = false;
