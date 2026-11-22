@@ -29,6 +29,7 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatClientProperties;
 
 public class Main extends JFrame{
+    // Instance Variables
     private JXMapViewer mapViewer;
     private User currentUser;
     private Ride currentRide;
@@ -38,7 +39,12 @@ public class Main extends JFrame{
     private static final String LOCATIONS_FILE = "src/data/locations.txt";
     private List<GeoPosition> routePoints = new ArrayList<>();
     private static final String ROUTES_FILE = "src/data/routes.txt";
+    private GeoPosition driverPosition = null;
+    private Image driverIcon = null;
+    private Timer activeTripTimer = null;
+    private Timer vehicleMoveTimer = null;
 
+    // Jframe Variables
     private JPanel pnlMain;
     private JLabel lblRequestARide;
     private JPanel pnlRequestARide;
@@ -78,6 +84,8 @@ public class Main extends JFrame{
     private JPanel pnlStatus;
     private JLabel lblStatus;
     private JLabel lblLogo;
+    private JPanel pnlUser;
+    private JLabel lblUserName;
 
     public Main() throws InvalidLocationException{
         ensureDefaultLocations();
@@ -89,11 +97,13 @@ public class Main extends JFrame{
         setVisible(true);
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
-        // Hard coding the logo, it won't be used in form
+        // Hard coding the images, the form doesn't register them :(
         URL logoUrl = Main.class.getClassLoader().getResource("resources/logo.png");
         lblLogo.setIcon(new ImageIcon(new ImageIcon(logoUrl).getImage().getScaledInstance(100, 50, Image.SCALE_SMOOTH)));
+        URL userUrl = Main.class.getClassLoader().getResource("resources/user.png");
+        lblUserName.setIcon(new ImageIcon(new ImageIcon(userUrl).getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
 
-        // Make panels, text fields, and buttons round
+        // Make panels, text fields, and buttons round. Woah roundness!!
         pnlRequestARide.putClientProperty(FlatClientProperties.STYLE_CLASS, "pnlRound");
         pnlRide.putClientProperty(FlatClientProperties.STYLE_CLASS, "pnlRound");
         pnlMap.putClientProperty(FlatClientProperties.STYLE_CLASS, "pnlMap");
@@ -118,7 +128,11 @@ public class Main extends JFrame{
         drivers.add(new Driver("Speedy Gonzales", "speedingyourgonzales@gmail.com", "123456789", "Motorcycle", "RUN-5555"));
         drivers.add(new Driver("Hiroshi Odokawa", "oddtaxi@gmail.com", "123456789", "Car", "ODD-3939"));
 
-        // Button Functionality
+        // User Infomation
+        lblUserName.setText(currentUser.getName());
+        // TODO ADD BALANCE
+
+        // Button Functionalities
         btnBook.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
@@ -128,47 +142,43 @@ public class Main extends JFrame{
         btnCancelRide.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                // TODO ADD A POPUP FOR ARE YOU SURE?
                 if(currentRide != null){
                     int choice = JOptionPane.showConfirmDialog(
                             Main.this,
                             "Are you sure you want to cancel your currrent ride?",
                             "Cancel Ride",
-                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.YES_NO_OPTION,
                             JOptionPane.WARNING_MESSAGE
                     );
-
                     if(choice == JOptionPane.NO_OPTION){
                         return;
                     }
                 }
-
+                if(currentRide != null && currentRide.getDriver() != null){
+                    currentRide.getDriver().setAvailable(true);
+                    currentRide.getDriver().setActiveRide(null);
+                }
                 tfPickUpLoc.setText("Enter pickup location");
                 tfDropOffLoc.setText("Enter dropoff location");
                 lblEstDistanceVal.setText("0.00 km");
                 lblEstFareVal.setText("Php 0.00");
-
+                lblActiveRideStatus.setText("Active Ride Status");
                 rbtnCar.setSelected(true);
                 rbtnCash.setSelected(true);
                 pnlText.setVisible(true);
                 pnlStatus.setVisible(true);
                 btnCancelRide.setVisible(false);
                 btnCancelRide.disable();
-
                 currentRide = null;
                 pickupLocation = null;
                 dropoffLocation = null;
-
                 routePoints.clear();
-
                 if(mapViewer != null){
                     pnlMap.remove(mapViewer);
                     mapViewer = null;
                 }
-                //lblMapPlaceholder.setVisible(true);
                 pnlMap.revalidate();
                 pnlMap.repaint();
-
                 btnBook.setEnabled(true);
                 btnBook.setText("BOOK");
             }
@@ -248,8 +258,7 @@ public class Main extends JFrame{
         String pickup = tfPickUpLoc.getText().trim();
         String dropoff = tfDropOffLoc.getText().trim();
 
-        if(pickup.isEmpty() || pickup.equals("Enter pickup location") || dropoff.isEmpty() ||
-                dropoff.equals("Enter dropoff location")){
+        if(pickup.isEmpty() || pickup.equals("Enter pickup location") || dropoff.isEmpty() || dropoff.equals("Enter dropoff location")){
             JOptionPane.showMessageDialog(this, "Please enter valid pickup and dropoff locations");
             return;
         }
@@ -260,7 +269,7 @@ public class Main extends JFrame{
         btnCancelRide.setVisible(true);
         btnCancelRide.enable();
 
-        System.out.println(currentUser.getName() + " has booked a ride");
+        System.out.println(currentUser.getName() + " has booked a ride"); // This is to check if you book a ride
 
         // DO NOT TOUCH, this stops the window from freezing when searching on OpenStreetMap
         SwingWorker<Location[], Exception> worker = new SwingWorker<Location[], Exception>(){
@@ -313,13 +322,12 @@ public class Main extends JFrame{
                             "Book Ride",
                             JOptionPane.INFORMATION_MESSAGE
                     );
-
                     simulateDriverAccept(isCar ? "Car" : "Motorcycle");
                 }
                 catch(Exception e){
                     btnBook.setEnabled(true);
                     e.printStackTrace();
-                    Throwable cause = e.getCause() != null ? e.getCause() : e;
+                    Throwable cause = (e.getCause() != null ? e.getCause() : e);
                     JOptionPane.showMessageDialog(
                             Main.this,
                             "Booking failed: " + cause.getMessage(),
@@ -334,7 +342,7 @@ public class Main extends JFrame{
 
     // Driver accepts after 3 seconds (FOR TESTING PURPOSES)
     private void simulateDriverAccept(String vehicle){
-        Timer timer = new Timer(5000, e -> {
+        Timer timer = new Timer(10000, e -> {
             if(currentRide == null || !currentRide.getStatus().equals("Pending")){
                 return;
             }
@@ -342,6 +350,7 @@ public class Main extends JFrame{
             for(Driver d : drivers){
                 if(d.isAvailable() && d.getVehicleType().equalsIgnoreCase(vehicle)){
                     d.acceptRide(currentRide);
+                    currentRide.setStatus("Accepted");
                     lblActiveRideStatus.setText(
                             "Active Ride Status: " +
                             currentRide.getStatus() + " — " + d.getName() +
@@ -359,6 +368,7 @@ public class Main extends JFrame{
                             JOptionPane.INFORMATION_MESSAGE
                     );
                     btnBook.setEnabled(true);
+                    simulateTrip(d);
                     return;
                 }
             }
@@ -380,6 +390,7 @@ public class Main extends JFrame{
         mapViewer.setZoom(5);
         mapViewer.setAddressLocation(new GeoPosition(10.3157,123.8854));
 
+        // Allows for mouse movement i.e. left/right clicks and scroll wheel
         MouseInputListener mia = new PanMouseInputListener(mapViewer);
         mapViewer.addMouseListener(mia);
         mapViewer.addMouseMotionListener(mia);
@@ -399,10 +410,10 @@ public class Main extends JFrame{
             Point2D p1 = map.convertGeoPositionToPoint(p1Geo);
             Point2D p2 = map.convertGeoPositionToPoint(p2Geo);
 
-            int x1 = (int) p1.getX();
-            int y1 = (int) p1.getY();
-            int x2 = (int) p2.getX();
-            int y2 = (int) p2.getY();
+            int x1 = (int)p1.getX();
+            int y1 = (int)p1.getY();
+            int x2 = (int)p2.getX();
+            int y2 = (int)p2.getY();
 
             // Route
             g2.setColor(new Color(0, 200, 255)); // Blue
@@ -435,6 +446,12 @@ public class Main extends JFrame{
             g2.drawOval(x2 - 8, y2 - 8, 16, 16);
             drawPinLabel(g2, "Dropoff: " + dropoffLocation.getAddress(), x2 + 12, y2 + 4);
 
+            // Driver Icon, wowie!
+            if(driverPosition != null && driverIcon != null){
+                Point2D pt = map.convertGeoPositionToPoint(driverPosition);
+                g2.drawImage(driverIcon, (int)pt.getX()-18, (int)pt.getY()-18, 36, 40, null);
+            }
+
             g2.dispose();
         });
 
@@ -454,6 +471,83 @@ public class Main extends JFrame{
         g2.fillRoundRect(x - pad, y - fm.getAscent() - pad + 2, fm.stringWidth(text) + pad * 2, fm.getHeight() + pad, 6, 6);
         g2.setColor(Color.WHITE);
         g2.drawString(text, x, y);
+    }
+
+    // Show vehicle and it moving
+    private void startVehicle(){
+        if(routePoints == null || routePoints.isEmpty() || currentRide == null){
+            return;
+        }
+
+        boolean isCar = currentRide instanceof CarRide;
+        String icon = (isCar ? "resources/car.png" : "resources/motorcycle.png");
+        URL url = Main.class.getClassLoader().getResource(icon);
+        driverIcon = new ImageIcon(url).getImage();
+
+        driverPosition = routePoints.get(0);
+        final int[] stepIdx = {0};
+
+        int totalDuration = currentRide.getTripDuration();
+        int delayMs = Math.max(30, totalDuration / Math.max(1, routePoints.size()));
+
+        vehicleMoveTimer = new Timer(delayMs, e -> {
+            if(currentRide == null || !"In Progress".equals(currentRide.getStatus()) || stepIdx[0] >= routePoints.size()){
+                ((Timer)e.getSource()).stop();
+                return;
+            }
+            driverPosition = routePoints.get(stepIdx[0]++);
+            mapViewer.repaint();
+        });
+        vehicleMoveTimer.start();
+    }
+
+    // Simulates the trip
+    private void simulateTrip(Driver driver){
+        btnBook.setEnabled(false);
+        activeTripTimer = new Timer(3000, e ->{
+            if(currentRide == null || !"Accepted".equals(currentRide.getStatus())){
+                return;
+            }
+
+            currentRide.startRide();
+            lblActiveRideStatus.setText("Active Ride Status: In Progress");
+            btnCancelRide.setEnabled(false); // No cancelling midtrip >:^(
+            btnBook.setEnabled(true);
+            startVehicle();
+
+            activeTripTimer = new Timer(currentRide.getTripDuration(), ev ->{
+                if(currentRide == null || !"In Progress".equals(currentRide.getStatus())){
+                    return;
+                }
+
+                // Stops all timers
+                if(activeTripTimer != null){
+                    activeTripTimer.stop();
+                    activeTripTimer = null;
+                }
+                if(vehicleMoveTimer != null){
+                    vehicleMoveTimer.stop();
+                    vehicleMoveTimer = null;
+                }
+
+                if(routePoints != null && !routePoints.isEmpty()){
+                    driverPosition = routePoints.get(routePoints.size() - 1);
+                    mapViewer.repaint();
+                }
+
+                currentRide.setStatus("Completed");
+                driver.setAvailable(true);
+                driver.setActiveRide(null);
+
+                lblActiveRideStatus.setText("Active Ride Status: Completed");
+                btnBook.setEnabled(true);
+                // TODO Add payment here
+            });
+            activeTripTimer.setRepeats(false);
+            activeTripTimer.start();
+        });
+        activeTripTimer.setRepeats(false);
+        activeTripTimer.start();
     }
 
     // Checks locations.txt, if not there searches on OpenStreetMap and adds result to locations.txt
@@ -548,7 +642,7 @@ public class Main extends JFrame{
         int startIndex = json.indexOf(key);
 
         if(startIndex == -1){
-            throw new InvalidLocationException("Coordinates not found in map response.");
+            throw new InvalidLocationException("Coordinates not found.");
         }
 
         startIndex += key.length();
@@ -578,7 +672,7 @@ public class Main extends JFrame{
             return cached;
         }
 
-        // Uses OSRM
+        // Uses OSRM to check the roads
         List<GeoPosition> points = new ArrayList<>();
         try{
             String urlStr = String.format(
@@ -639,6 +733,7 @@ public class Main extends JFrame{
         return points;
     }
 
+    // Loads the route from routes.txt
     private List<GeoPosition> loadRouteFromFile(String routeKey){
         List<GeoPosition> points = new ArrayList<>();
 
@@ -671,6 +766,7 @@ public class Main extends JFrame{
         return points;
     }
 
+    // Saves routes to routes.txt
     private void saveRouteToFile(String routeKey, List<GeoPosition> points){
         File file = new File(ROUTES_FILE);
 
@@ -713,10 +809,10 @@ public class Main extends JFrame{
         return totalKm;
     }
 
+    //----------------Main----------------//
     public static void main(String[] args) throws InvalidLocationException {
         FlatDarkLaf.registerCustomDefaultsSource("resources");
         FlatDarkLaf.setup();
         new Main();
     }
 }
-

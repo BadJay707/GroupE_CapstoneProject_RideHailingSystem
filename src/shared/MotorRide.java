@@ -15,4 +15,10 @@ public class MotorRide extends Ride{
         setFareAmount(total);
         return total;
     }
+
+    @Override
+    public int getTripDuration(){ return Math.max(3000, (int)(getDistanceKm() * 1500)); } // 3 seconds every 1500m
+
+    @Override
+    public int getVehicleStepMs(){ return 65; }
 }

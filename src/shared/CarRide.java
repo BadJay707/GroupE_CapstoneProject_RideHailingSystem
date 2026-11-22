@@ -15,4 +15,12 @@ public class CarRide extends Ride{
         setFareAmount(total);
         return total;
     }
+
+    @Override
+    public int getTripDuration(){
+        return Math.max(5000, (int)(getDistanceKm() * 2500)); // 5 seconds every 2500m
+    }
+
+    @Override
+    public int getVehicleStepMs(){ return 120; }
 }
