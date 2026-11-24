@@ -8,7 +8,6 @@
 
 ## Technologies Used
 - Java Swing UI Designer
-- FlatLaf
 - JXMapViewer2
 - OpenStreetMap (API)
-- Open Source Routing Machine (API)
+- FlatLaf

@@ -18,7 +18,7 @@ public class CarRide extends Ride{
 
     @Override
     public int getTripDuration(){
-        return Math.max(5000, (int)(getDistanceKm() * 2500)); // 5 seconds every 2500m
+        return Math.max(10000, (int)(getDistanceKm() * 3500)); // minimum of 10 seconds, 3.5-ish seconds per km
     }
 
     @Override

@@ -5,8 +5,7 @@ public class Driver extends User{
     private String plateNumber;
     private boolean isAvailable;
 
-    public Driver(String name, String email, String contactNum, String vehicleType,
-                  String plateNumber) throws InvalidLocationException{
+    public Driver(String name, String email, String contactNum, String vehicleType, String plateNumber) throws InvalidLocationException{
         super(name, email, contactNum);
         setVehicleType(vehicleType);
         setPlateNumber(plateNumber);

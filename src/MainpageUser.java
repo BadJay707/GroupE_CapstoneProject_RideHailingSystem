@@ -28,7 +28,7 @@ import java.net.URL;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatClientProperties;
 
-public class Main extends JFrame{
+public class MainpageUser extends JFrame{
     // Instance Variables
     private JXMapViewer mapViewer;
     private User currentUser;
@@ -87,10 +87,10 @@ public class Main extends JFrame{
     private JPanel pnlUser;
     private JLabel lblUserName;
 
-    public Main() throws InvalidLocationException{
+    public MainpageUser() throws InvalidLocationException{
         ensureDefaultLocations();
         setContentPane(pnlMain);
-        setTitle("Ride Hailing System");
+        setTitle("Spitztour");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLocationRelativeTo(null);
@@ -98,9 +98,9 @@ public class Main extends JFrame{
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         // Hard coding the images, the form doesn't register them :(
-        URL logoUrl = Main.class.getClassLoader().getResource("resources/logo.png");
+        URL logoUrl = MainpageUser.class.getClassLoader().getResource("resources/logo.png");
         lblLogo.setIcon(new ImageIcon(new ImageIcon(logoUrl).getImage().getScaledInstance(100, 50, Image.SCALE_SMOOTH)));
-        URL userUrl = Main.class.getClassLoader().getResource("resources/user.png");
+        URL userUrl = MainpageUser.class.getClassLoader().getResource("resources/user.png");
         lblUserName.setIcon(new ImageIcon(new ImageIcon(userUrl).getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
 
         // Make panels, text fields, and buttons round. Woah roundness!!
@@ -126,7 +126,7 @@ public class Main extends JFrame{
         drivers = new ArrayList<>();
         // test
         drivers.add(new Driver("Speedy Gonzales", "speedingyourgonzales@gmail.com", "123456789", "Motorcycle", "RUN-5555"));
-        drivers.add(new Driver("Hiroshi Odokawa", "oddtaxi@gmail.com", "123456789", "Car", "ODD-3939"));
+        drivers.add(new Driver("Waluigi", "waluignumbaone@gmail.com", "123456789", "Car", "WAH-7777"));
 
         // User Infomation
         lblUserName.setText(currentUser.getName());
@@ -144,7 +144,7 @@ public class Main extends JFrame{
             public void actionPerformed(ActionEvent e){
                 if(currentRide != null){
                     int choice = JOptionPane.showConfirmDialog(
-                            Main.this,
+                            MainpageUser.this,
                             "Are you sure you want to cancel your currrent ride?",
                             "Cancel Ride",
                             JOptionPane.YES_NO_OPTION,
@@ -158,29 +158,7 @@ public class Main extends JFrame{
                     currentRide.getDriver().setAvailable(true);
                     currentRide.getDriver().setActiveRide(null);
                 }
-                tfPickUpLoc.setText("Enter pickup location");
-                tfDropOffLoc.setText("Enter dropoff location");
-                lblEstDistanceVal.setText("0.00 km");
-                lblEstFareVal.setText("Php 0.00");
-                lblActiveRideStatus.setText("Active Ride Status");
-                rbtnCar.setSelected(true);
-                rbtnCash.setSelected(true);
-                pnlText.setVisible(true);
-                pnlStatus.setVisible(true);
-                btnCancelRide.setVisible(false);
-                btnCancelRide.disable();
-                currentRide = null;
-                pickupLocation = null;
-                dropoffLocation = null;
-                routePoints.clear();
-                if(mapViewer != null){
-                    pnlMap.remove(mapViewer);
-                    mapViewer = null;
-                }
-                pnlMap.revalidate();
-                pnlMap.repaint();
-                btnBook.setEnabled(true);
-                btnBook.setText("BOOK");
+                resetUI();
             }
         });
 
@@ -314,10 +292,10 @@ public class Main extends JFrame{
                     mapViewer.repaint();
 
                     JOptionPane.showMessageDialog(
-                            Main.this,
+                            MainpageUser.this,
                             "Ride Booked!\n" +
-                            "Distance: " + String.format("%.2f", currentRide.getDistanceKm()) + "\n" +
-                            "Estimated Fare: " + String.format("%.2f km", currentRide.getFareAmount()) + "\n" +
+                            "Distance: " + String.format("%.2f km", currentRide.getDistanceKm()) + "\n" +
+                            "Estimated Fare: " + String.format("Php %.2f", currentRide.getFareAmount()) + "\n" +
                             "Status: " + currentRide.getStatus(),
                             "Book Ride",
                             JOptionPane.INFORMATION_MESSAGE
@@ -329,7 +307,7 @@ public class Main extends JFrame{
                     e.printStackTrace();
                     Throwable cause = (e.getCause() != null ? e.getCause() : e);
                     JOptionPane.showMessageDialog(
-                            Main.this,
+                            MainpageUser.this,
                             "Booking failed: " + cause.getMessage(),
                             "Error",
                             JOptionPane.ERROR_MESSAGE
@@ -367,7 +345,6 @@ public class Main extends JFrame{
                             "Driver Found",
                             JOptionPane.INFORMATION_MESSAGE
                     );
-                    btnBook.setEnabled(true);
                     simulateTrip(d);
                     return;
                 }
@@ -447,6 +424,7 @@ public class Main extends JFrame{
             drawPinLabel(g2, "Dropoff: " + dropoffLocation.getAddress(), x2 + 12, y2 + 4);
 
             // Driver Icon, wowie!
+            // TODO MAKE ICON ACTUALLY FACE WHERE ITS GOING
             if(driverPosition != null && driverIcon != null){
                 Point2D pt = map.convertGeoPositionToPoint(driverPosition);
                 g2.drawImage(driverIcon, (int)pt.getX()-18, (int)pt.getY()-18, 36, 40, null);
@@ -481,7 +459,7 @@ public class Main extends JFrame{
 
         boolean isCar = currentRide instanceof CarRide;
         String icon = (isCar ? "resources/car.png" : "resources/motorcycle.png");
-        URL url = Main.class.getClassLoader().getResource(icon);
+        URL url = MainpageUser.class.getClassLoader().getResource(icon);
         driverIcon = new ImageIcon(url).getImage();
 
         driverPosition = routePoints.get(0);
@@ -503,7 +481,6 @@ public class Main extends JFrame{
 
     // Simulates the trip
     private void simulateTrip(Driver driver){
-        btnBook.setEnabled(false);
         activeTripTimer = new Timer(3000, e ->{
             if(currentRide == null || !"Accepted".equals(currentRide.getStatus())){
                 return;
@@ -512,7 +489,7 @@ public class Main extends JFrame{
             currentRide.startRide();
             lblActiveRideStatus.setText("Active Ride Status: In Progress");
             btnCancelRide.setEnabled(false); // No cancelling midtrip >:^(
-            btnBook.setEnabled(true);
+            btnBook.setEnabled(false);
             startVehicle();
 
             activeTripTimer = new Timer(currentRide.getTripDuration(), ev ->{
@@ -540,8 +517,8 @@ public class Main extends JFrame{
                 driver.setActiveRide(null);
 
                 lblActiveRideStatus.setText("Active Ride Status: Completed");
+                processRidePayment();
                 btnBook.setEnabled(true);
-                // TODO Add payment here
             });
             activeTripTimer.setRepeats(false);
             activeTripTimer.start();
@@ -580,7 +557,7 @@ public class Main extends JFrame{
             }
         }
 
-        Location fetched = geocodeFromNominatim(cleanQuery);
+        Location fetched = geocodeFromOSM(cleanQuery);
         saveLocationToFile(cleanQuery, fetched.getLatitude(), fetched.getLongitude());
         return fetched;
     }
@@ -599,7 +576,7 @@ public class Main extends JFrame{
     }
 
     // Searches on OpenStreetMap (needs internet)
-    private Location geocodeFromNominatim(String query) throws InvalidLocationException{
+    private Location geocodeFromOSM(String query) throws InvalidLocationException{
         try{
             String searchQuery = (query.toLowerCase().contains("cebu") ? query : query + ", Cebu, Philippines");
             String encodedQuery = URLEncoder.encode(searchQuery, StandardCharsets.UTF_8);
@@ -672,7 +649,7 @@ public class Main extends JFrame{
             return cached;
         }
 
-        // Uses OSRM to check the roads
+        // Uses OSRM to check the roads (needs internet)
         List<GeoPosition> points = new ArrayList<>();
         try{
             String urlStr = String.format(
@@ -788,6 +765,72 @@ public class Main extends JFrame{
         }
     }
 
+    // Processes payment for the ride
+    private void processRidePayment(){
+        if(currentRide == null){
+            return;
+        }
+
+        double fare = currentRide.getFareAmount();
+        String selectedMethod = (rbtnCard.isSelected() ? "card" : rbtnEwallet.isSelected() ? "e-wallet" : "cash");
+        Payment payment = null;
+
+        while(payment == null){
+            try{
+                String details = null;
+
+                if("Card".equalsIgnoreCase(selectedMethod)){
+                    details = JOptionPane.showInputDialog(
+                            this,
+                            "Total Fare: " + String.format("Php %.2f", fare) +
+                            "\nEnter Card Number (at least 4 digits):",
+                            "Card Payment",
+                            JOptionPane.QUESTION_MESSAGE
+                    );
+                    if(details == null){
+                        return;
+                    }
+                }
+                else if("E-Wallet".equalsIgnoreCase(selectedMethod)){
+                    details = JOptionPane.showInputDialog(
+                            this,
+                            "Total Fare: " + String.format("Php %.2f", fare) +
+                            "\nEnter E-Wallet Number:",
+                            "E-Wallet Payment",
+                            JOptionPane.QUESTION_MESSAGE
+                    );
+                    if(details == null){
+                        return;
+                    }
+                }
+
+                payment = PaymentFactory.createPayment(selectedMethod, fare, details);
+                if(payment.processPayment()){
+                    currentRide.setStatus(payment.getStatus());
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Payment Successful!\n\n" +
+                            "Method: " + payment.getPaymentMethodName() + "\n" +
+                            "Amount Paid: " + String.format("Php %.2f", payment.getAmount()) + "\n" +
+                            "Status: " + payment.getStatus(),
+                            "Payment Receipt",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                    resetUI();
+                }
+            }
+            catch(InvalidPaymentException e){
+                payment = null;
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Payment Error: " + e.getMessage(),
+                        "Invalid Payment",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+    }
+
     // Helper functions to calculate the distance using the road distance
     private double calculateRouteDistanceKm(List<GeoPosition> points) throws InvalidLocationException{
         double totalKm = 0.0;
@@ -809,10 +852,53 @@ public class Main extends JFrame{
         return totalKm;
     }
 
+    // Resets all UI elements
+    private void resetUI(){
+        if(activeTripTimer != null){
+            activeTripTimer.stop();
+            activeTripTimer = null;
+        }
+        if(vehicleMoveTimer != null){
+            vehicleMoveTimer.stop();
+            vehicleMoveTimer = null;
+        }
+
+        currentRide = null;
+        pickupLocation = null;
+        dropoffLocation = null;
+        driverPosition = null;
+        driverIcon = null;
+
+        tfPickUpLoc.setText("Enter pickup location");
+        tfDropOffLoc.setText("Enter dropoff location");
+        lblEstDistanceVal.setText("0.00 km");
+        lblEstFareVal.setText("Php 0.00");
+        lblActiveRideStatus.setText("Active Ride Status");
+        rbtnCar.setSelected(true);
+        rbtnCash.setSelected(true);
+        pnlText.setVisible(true);
+
+        pnlStatus.setVisible(true);
+        btnCancelRide.setVisible(false);
+        btnCancelRide.disable();
+
+        routePoints.clear();
+        if(mapViewer != null){
+            mapViewer.repaint();
+            pnlMap.remove(mapViewer);
+            mapViewer = null;
+        }
+
+        pnlMap.revalidate();
+        pnlMap.repaint();
+        btnBook.setEnabled(true);
+        btnBook.setText("BOOK");
+    }
+
     //----------------Main----------------//
     public static void main(String[] args) throws InvalidLocationException {
         FlatDarkLaf.registerCustomDefaultsSource("resources");
         FlatDarkLaf.setup();
-        new Main();
+        new MainpageUser();
     }
 }
