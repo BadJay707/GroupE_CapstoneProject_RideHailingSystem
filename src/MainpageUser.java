@@ -123,14 +123,12 @@ public class MainpageUser extends JFrame{
 
         //----------------Start of the Code----------------//
         currentUser = new User("admin", "admin@example.com", "123456789"); // TODO CHANGE THIS LATER
+        lblUserName.setText(currentUser.getName());
+
         drivers = new ArrayList<>();
         // test
-        drivers.add(new Driver("Speedy Gonzales", "speedingyourgonzales@gmail.com", "123456789", "Motorcycle", "RUN-5555"));
-        drivers.add(new Driver("Waluigi", "waluignumbaone@gmail.com", "123456789", "Car", "WAH-7777"));
-
-        // User Infomation
-        lblUserName.setText(currentUser.getName());
-        // TODO ADD BALANCE
+        drivers.add(new Driver("Speedy Gonzales", "speedingyourgonzales@gmail.com", "09123456789", "Motorcycle", "RUN-5555"));
+        drivers.add(new Driver("Waluigi", "waluignumbaone@gmail.com", "09123456789", "Car", "WAH-7777"));
 
         // Button Functionalities
         btnBook.addActionListener(new ActionListener(){
@@ -247,7 +245,7 @@ public class MainpageUser extends JFrame{
         btnCancelRide.setVisible(true);
         btnCancelRide.enable();
 
-        System.out.println(currentUser.getName() + " has booked a ride"); // This is to check if you book a ride
+        //System.out.println(currentUser.getName() + " has booked a ride from " + pickup + " to " + dropoff); // This is to check if you book a ride
 
         // DO NOT TOUCH, this stops the window from freezing when searching on OpenStreetMap
         SwingWorker<Location[], Exception> worker = new SwingWorker<Location[], Exception>(){
@@ -788,7 +786,7 @@ public class MainpageUser extends JFrame{
                             JOptionPane.QUESTION_MESSAGE
                     );
                     if(details == null){
-                        return;
+                        continue;
                     }
                 }
                 else if("E-Wallet".equalsIgnoreCase(selectedMethod)){
@@ -800,7 +798,7 @@ public class MainpageUser extends JFrame{
                             JOptionPane.QUESTION_MESSAGE
                     );
                     if(details == null){
-                        return;
+                        continue;
                     }
                 }
 

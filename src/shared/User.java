@@ -38,7 +38,7 @@ public class User {
         this.email = email;
     }
     public void setContactNum(String contactNum) throws InvalidLocationException{
-        if(contactNum == null || !email.matches("^09\\\\d{9}$")){
+        if(contactNum == null || !contactNum.matches("^09\\d{9}$")){
             throw new InvalidLocationException("Contact number must be 11 digits starting with 09");
         }
         this.contactNum = contactNum;

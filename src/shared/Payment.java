@@ -9,8 +9,10 @@ public abstract class Payment implements PaymentGateway{
         status = "Pending";
     }
 
+    //----------------Methods----------------//
     public void markPaid(){ status = "Paid"; }
 
+    // Getters and Setters
     public String getStatus(){ return status; }
     public double getAmount() { return amount; }
 

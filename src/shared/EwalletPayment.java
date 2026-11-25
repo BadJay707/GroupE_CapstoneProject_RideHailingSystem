@@ -3,10 +3,9 @@ package shared;
 public class EwalletPayment extends Payment{
     private String accountNumber;
 
-    // TODO ADD RESTRICTIONS (i.e. AAAAAA is not allowed)
     public EwalletPayment(double amount, String accountNumber) throws InvalidPaymentException{
         super(amount);
-        if(accountNumber == null || accountNumber.trim().isEmpty()){
+        if(accountNumber == null || accountNumber.trim().isEmpty() || !accountNumber.matches("^09\\d{9}$")){ // Needs phone number, starts with 09 and then 9 digits
             throw new InvalidPaymentException("Invalid account number.");
         }
         this.accountNumber = accountNumber.trim();

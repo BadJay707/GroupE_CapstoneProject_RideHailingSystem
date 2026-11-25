@@ -25,7 +25,7 @@ public abstract class Ride {
 
     //----------------Methods----------------//
     public abstract double calculateFare();
-    public abstract int getTripDuration();
+    public abstract int getTripDuration(); // Uses miliseconds
     public abstract int getVehicleStepMs(); // Uses miliseconds
 
     public void startRide(){

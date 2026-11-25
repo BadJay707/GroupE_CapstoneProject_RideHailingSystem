@@ -5,6 +5,7 @@ public class CashPayment extends Payment{
         super(amount);
     }
 
+    //----------------Methods----------------//
     @Override
     public boolean processPayment() throws InvalidPaymentException {
         if(getAmount() <= 0){
@@ -15,7 +16,5 @@ public class CashPayment extends Payment{
     }
 
     @Override
-    public String getPaymentMethodName() {
-        return "Cash";
-    }
+    public String getPaymentMethodName() { return "Cash"; }
 }

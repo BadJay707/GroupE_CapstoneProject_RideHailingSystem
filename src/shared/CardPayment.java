@@ -12,6 +12,7 @@ public class CardPayment extends Payment{
         this.cardNumber = cardNumber.trim();
     }
 
+    //----------------Methods----------------//
     @Override
     public boolean processPayment() throws InvalidPaymentException {
         if(getAmount() <= 0){
