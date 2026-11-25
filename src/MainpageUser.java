@@ -41,6 +41,7 @@ public class MainpageUser extends JFrame{
     private static final String ROUTES_FILE = "src/data/routes.txt";
     private GeoPosition driverPosition = null;
     private Image driverIcon = null;
+    private double driverAngle = 0.0;
     private Timer activeTripTimer = null;
     private Timer vehicleMoveTimer = null;
 
@@ -116,8 +117,8 @@ public class MainpageUser extends JFrame{
         btnCancelRide.putClientProperty("FlatLaf.style", "arc: 17; font: bold 16 'Inter'");
         tfDropOffLoc.putClientProperty("FlatLaf.style", "arc: 17");
         tfPickUpLoc.putClientProperty("FlatLaf.style", "arc: 17");
-        pnlMap.setPreferredSize(new Dimension(600, 510));
 
+        pnlMap.setPreferredSize(new Dimension(600, 510));
         btnCancelRide.setVisible(false);
         btnCancelRide.disable();
 
@@ -316,7 +317,7 @@ public class MainpageUser extends JFrame{
         worker.execute();
     }
 
-    // Driver accepts after 3 seconds (FOR TESTING PURPOSES)
+    // Driver accepts after 10 seconds (FOR TESTING PURPOSES)
     private void simulateDriverAccept(String vehicle){
         Timer timer = new Timer(10000, e -> {
             if(currentRide == null || !currentRide.getStatus().equals("Pending")){
@@ -422,15 +423,17 @@ public class MainpageUser extends JFrame{
             drawPinLabel(g2, "Dropoff: " + dropoffLocation.getAddress(), x2 + 12, y2 + 4);
 
             // Driver Icon, wowie!
-            // TODO MAKE ICON ACTUALLY FACE WHERE ITS GOING
             if(driverPosition != null && driverIcon != null){
                 Point2D pt = map.convertGeoPositionToPoint(driverPosition);
-                g2.drawImage(driverIcon, (int)pt.getX()-18, (int)pt.getY()-18, 36, 40, null);
+                Graphics2D gIcon = (Graphics2D)g2.create();
+                gIcon.translate(pt.getX(), pt.getY());
+                gIcon.rotate(driverAngle);
+                gIcon.drawImage(driverIcon, -18, -18, 36, 40, null);
+                gIcon.dispose();
             }
 
             g2.dispose();
         });
-
         pnlMap.setLayout(new BorderLayout());
         pnlMap.setPreferredSize(new Dimension(600, 510));
         pnlMap.add(mapViewer, BorderLayout.CENTER);
@@ -449,7 +452,7 @@ public class MainpageUser extends JFrame{
         g2.drawString(text, x, y);
     }
 
-    // Show vehicle and it moving
+    // Shows the vehicle and it moving
     private void startVehicle(){
         if(routePoints == null || routePoints.isEmpty() || currentRide == null){
             return;
@@ -471,7 +474,21 @@ public class MainpageUser extends JFrame{
                 ((Timer)e.getSource()).stop();
                 return;
             }
-            driverPosition = routePoints.get(stepIdx[0]++);
+
+            // Gets the angle of where the vehicle should face
+            int idx = stepIdx[0]++;
+            driverPosition = routePoints.get(idx);
+            if(idx+1 < routePoints.size()){
+                Point2D currPt = mapViewer.convertGeoPositionToPoint(driverPosition);
+                Point2D nextPt = mapViewer.convertGeoPositionToPoint(routePoints.get(idx+1));
+                double dx = nextPt.getX() - currPt.getX();
+                double dy = nextPt.getY() - currPt.getY();
+
+                if(dx != 0 || dy != 0){
+                    driverAngle = Math.atan2(dy, dx) + (Math.PI / 2.0);
+                }
+            }
+
             mapViewer.repaint();
         });
         vehicleMoveTimer.start();
@@ -527,8 +544,8 @@ public class MainpageUser extends JFrame{
 
     // Checks locations.txt, if not there searches on OpenStreetMap and adds result to locations.txt
     private Location searchLocation(String query) throws InvalidLocationException{
-        String cleanQuery = query.trim();
-        String lowerQuery = cleanQuery.toLowerCase();
+        String clean = query.trim();
+        String lower = clean.toLowerCase();
 
         File file = new File(LOCATIONS_FILE);
         if(file.exists()) {
@@ -542,10 +559,10 @@ public class MainpageUser extends JFrame{
                     String[] entries = line.split(",");
                     if(entries.length == 3) {
                         String savedName = entries[0].trim().toLowerCase();
-                        if(lowerQuery.equals(savedName) || lowerQuery.contains(savedName)){
+                        if(lower.equals(savedName) || lower.contains(savedName)){
                             double lat = Double.parseDouble(entries[1].trim());
                             double lon = Double.parseDouble(entries[2].trim());
-                            return new Location(cleanQuery, lon, lat);
+                            return new Location(clean, lon, lat);
                         }
                     }
                 }
@@ -555,8 +572,8 @@ public class MainpageUser extends JFrame{
             }
         }
 
-        Location fetched = geocodeFromOSM(cleanQuery);
-        saveLocationToFile(cleanQuery, fetched.getLatitude(), fetched.getLongitude());
+        Location fetched = geocodeFromOSM(clean);
+        saveLocationToFile(clean, fetched.getLatitude(), fetched.getLongitude());
         return fetched;
     }
 
@@ -576,9 +593,9 @@ public class MainpageUser extends JFrame{
     // Searches on OpenStreetMap (needs internet)
     private Location geocodeFromOSM(String query) throws InvalidLocationException{
         try{
-            String searchQuery = (query.toLowerCase().contains("cebu") ? query : query + ", Cebu, Philippines");
-            String encodedQuery = URLEncoder.encode(searchQuery, StandardCharsets.UTF_8);
-            String urlStr = "https://nominatim.openstreetmap.org/search?q=" + encodedQuery + "&format=json&limit=1";
+            String search = (query.toLowerCase().contains("cebu") ? query : query + ", Cebu, Philippines");
+            String encoded = URLEncoder.encode(search, StandardCharsets.UTF_8);
+            String urlStr = "https://nominatim.openstreetmap.org/search?q=" + encoded + "&format=json&limit=1";
 
             URL url = new URL(urlStr);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -614,17 +631,17 @@ public class MainpageUser extends JFrame{
 
     // Extracts information from the json created by searching from OpenStreetMap
     private double extractJsonDouble(String json, String key) throws InvalidLocationException{
-        int startIndex = json.indexOf(key);
+        int startIdx = json.indexOf(key);
 
-        if(startIndex == -1){
+        if(startIdx == -1){
             throw new InvalidLocationException("Coordinates not found.");
         }
 
-        startIndex += key.length();
-        int endIndex = json.indexOf("\"", startIndex);
+        startIdx += key.length();
+        int endIdx = json.indexOf("\"", startIdx);
 
         try{
-            return Double.parseDouble(json.substring(startIndex, endIndex));
+            return Double.parseDouble(json.substring(startIdx, endIdx));
         }
         catch(NumberFormatException e){
             throw new InvalidLocationException("Malformed coordinate data.");
